@@ -156,7 +156,7 @@ app.get('/customers', (req, res) => {
   var router = express.Router();
 
   var route=router.get('/', function(req, res) {
-   res.json(RoomsList)
+   res.json(bookedRooms)
 });
 
 
