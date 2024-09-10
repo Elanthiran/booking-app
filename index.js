@@ -3,6 +3,8 @@ const bodyParser = require('body-parser');
 
 const app = express();
 app.use(bodyParser.json());
+var router = express.Router();
+app.use('',router)
 
 app.listen(5000,()=>
 {
@@ -46,7 +48,7 @@ let customers = [
 
 //creating a room
 
-app.post("/createroom",(request,response)=>
+router.post("/createroom",(request,response)=>
 {
     const newRoom=request.body;
     const checking=rooms.find((e)=>e.roomId==newRoom.roomId)
@@ -63,14 +65,14 @@ app.post("/createroom",(request,response)=>
 
 //view all rooms avaliable
 
-app.get("/view",(request,response)=>
+router.get("/view",(request,response)=>
 {
     response.status(200).json({RoomsList : rooms});
     console.log(RoomsList)
 })
 
 //booking checking
-app.post("/booking/createroom/:id", (req,res)=>{
+router.post("/booking/createroom/:id", (req,res)=>{
     try{
       const {id} = req.params;
       let bookRoom = req.body; 
@@ -115,7 +117,7 @@ app.post("/booking/createroom/:id", (req,res)=>{
     }
 });
 
-app.get('/viewbooking',(req,res) => {
+router.get('/viewbooking',(req,res) => {
     const bookedRooms = bookings.map(booking => {
         const {roomId ,Status,customer,bookingDate,startTime,endTime} = booking;
         return {roomId ,Status,customer,bookingDate,startTime,endTime} 
@@ -124,7 +126,7 @@ app.get('/viewbooking',(req,res) => {
 });
 
 //api to list all the customers with booked data
-app.get('/customers', (req, res) => {
+router.get('/customers', (req, res) => {
     const customerBookings = customers.map(customer => {
       const { name, bookings } = customer;
       const customerDetails = bookings.map(booking => {
@@ -139,7 +141,7 @@ app.get('/customers', (req, res) => {
   });
 
 // api to list how many times the user booked the room
-  app.get('/customer/:name', (req, res) => {
+  router.get('/customer/:name', (req, res) => {
     const { name } = req.params;
     const customer = customers.find(e => e.name === name);
     if (!customer) {
@@ -153,12 +155,5 @@ app.get('/customers', (req, res) => {
     res.json(customerBookings);
   });
 
-  var router = express.Router();
 
-  var route=router.get('/', function(req, res) {
-   res.json(bookedRooms)
-});
-
-
-app.use('',route)
 
